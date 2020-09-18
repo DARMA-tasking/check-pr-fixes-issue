@@ -1,0 +1,30 @@
+{
+  "name": "check-pr-fixes-issue",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint .",
+    "prepare": "ncc build index.js -o dist --license licenses.txt",
+    "test": "jest",
+    "all": "npm run lint && npm run prepare && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DARMA-tasking/check-pr-fixes-issue.git"
+  },
+  "keywords": [],
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/DARMA-tasking/check-pr-fixes-issue/issues"
+  },
+  "homepage": "https://github.com/DARMA-tasking/check-pr-fixes-issue#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.5"
+  },
+  "devDependencies": {
+    "@vercel/ncc": "^0.24.1",
+    "eslint": "^7.9.0",
+    "jest": "^26.4.2"
+  }
+}
