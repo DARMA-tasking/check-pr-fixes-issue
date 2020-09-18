@@ -10,8 +10,14 @@ const helpers = __webpack_require__(505);
 
 async function check() {
   try {
+    const prBranch = core.getInput("pr_branch");
     const prTitle = core.getInput("pr_title");
     const prDescription = core.getInput("pr_description");
+
+    if (helpers.checkPrBranch(prBranch) === false) {
+      core.setFailed("PR branch has wrong name");
+      return;
+    }
 
     if (helpers.checkPrTitle(prTitle) === false) {
       core.setFailed("PR title doesn't start with issue number");
@@ -24,7 +30,11 @@ async function check() {
     }
 
     if (
-      helpers.compareTitleAndDescriptionIssue(prTitle, prDescription) === false
+      helpers.compareTitleDescriptionBranchIssue(
+        prBranch,
+        prTitle,
+        prDescription
+      ) === false
     ) {
       core.setFailed(
         "PR title and description contain different issue numbers"
@@ -379,14 +389,25 @@ exports.getState = getState;
 /***/ 505:
 /***/ ((__unused_webpack_module, exports) => {
 
+function checkPrBranch(prBranch) {
+  let prBranchRegexp = /^\d+(-[^\W_]+)+$/;
+  return prBranchRegexp.test(prBranch);
+}
+
 function checkPrTitle(prTitle) {
   let prTitleRegexp = /^#?\d+\s+.+$/;
   return prTitleRegexp.test(prTitle);
 }
 
 function checkPrDescription(prDescription) {
-  let prDescriptionRegexp = /[Ff]ixes #\d+/;
+  let prDescriptionRegexp = /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))( #)\d+/i;
   return prDescriptionRegexp.test(prDescription);
+}
+
+function extractBranchIssue(prBranch) {
+  let prBranchRegexp = /^\d+(?=((-[^\W_]+)+$))/;
+  let issueNumber = prBranch.match(prBranchRegexp);
+  return parseInt(issueNumber);
 }
 
 function extractTitleIssue(prTitle) {
@@ -401,17 +422,20 @@ function extractDescriptionIssue(prDescription) {
   return parseInt(issueNumber, 10);
 }
 
-function compareTitleAndDescriptionIssue(prTitle, prDescription) {
+function compareTitleDescriptionBranchIssue(prBranch, prTitle, prDescription) {
+  let branchIssue = extractBranchIssue(prBranch);
   let titleIssue = extractTitleIssue(prTitle);
   let descriptionIssue = extractDescriptionIssue(prDescription);
-  return titleIssue === descriptionIssue;
+  return branchIssue === titleIssue && titleIssue === descriptionIssue;
 }
 
+exports.checkPrBranch = checkPrBranch;
 exports.checkPrTitle = checkPrTitle;
 exports.checkPrDescription = checkPrDescription;
+exports.extractBranchIssue = extractBranchIssue;
 exports.extractTitleIssue = extractTitleIssue;
 exports.extractDescriptionIssue = extractDescriptionIssue;
-exports.compareTitleAndDescriptionIssue = compareTitleAndDescriptionIssue;
+exports.compareTitleDescriptionBranchIssue = compareTitleDescriptionBranchIssue;
 
 
 /***/ }),

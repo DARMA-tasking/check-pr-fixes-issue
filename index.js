@@ -3,8 +3,14 @@ const helpers = require("./src/helpers");
 
 async function check() {
   try {
+    const prBranch = core.getInput("pr_branch");
     const prTitle = core.getInput("pr_title");
     const prDescription = core.getInput("pr_description");
+
+    if (helpers.checkPrBranch(prBranch) === false) {
+      core.setFailed("PR branch has wrong name");
+      return;
+    }
 
     if (helpers.checkPrTitle(prTitle) === false) {
       core.setFailed("PR title doesn't start with issue number");
@@ -17,7 +23,11 @@ async function check() {
     }
 
     if (
-      helpers.compareTitleAndDescriptionIssue(prTitle, prDescription) === false
+      helpers.compareTitleDescriptionBranchIssue(
+        prBranch,
+        prTitle,
+        prDescription
+      ) === false
     ) {
       core.setFailed(
         "PR title and description contain different issue numbers"

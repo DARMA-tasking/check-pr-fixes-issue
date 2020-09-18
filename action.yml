@@ -5,6 +5,10 @@ branding:
   color: "green"
 description: Check PR title and description format
 inputs:
+  pr_branch:
+    description: "PR's branch name"
+    required: true
+    default: ""
   pr_title:
     description: "Title of the PR"
     required: true
