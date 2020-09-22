@@ -4,12 +4,12 @@ function checkPrBranch(prBranch) {
 }
 
 function checkPrTitle(prTitle) {
-  let prTitleRegexp = /^#?\d+\s+.+$/;
+  let prTitleRegexp = /^#?\d+[:;,/&]?\s+.+$/;
   return prTitleRegexp.test(prTitle);
 }
 
 function checkPrDescription(prDescription) {
-  let prDescriptionRegexp = /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))( #)\d+/i;
+  let prDescriptionRegexp = /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))(:? #)\d+/i;
   return prDescriptionRegexp.test(prDescription);
 }
 

@@ -2,7 +2,7 @@
 
 ![Unit tests](https://github.com/DARMA-tasking/check-pr-fixes-issue/workflows/Unit%20tests/badge.svg)
 
-The DARMA-tasking/check-pr-fixes-issue/ is a JavaScript action that checks if PR description contains phrase "Fixes #issue". It also checks if PR title and PR description mentions the same issue number.
+The DARMA-tasking/check-pr-fixes-issue/ is a JavaScript action that checks if PR description contains phrase "Fixes #issue". It also checks if PR title, description and branch mention the same issue number.
 
 ## Workflow example
 
@@ -38,16 +38,17 @@ Run the tests
 $ npm test
 
  PASS  tests/helpers.test.js
+  checkPrBranch function
+    ✓ checks if PR branch starts with an issue number (2 ms)
   checkPrTitle function
     ✓ checks if PR title starts with an issue number (3 ms)
   checkPrDescription function
     ✓ checks if PR description contains phrase "Fixes #issue" (2 ms)
+  extractBranchIssue function
+    ✓ extracts issue number from PR branch (1 ms)
   extractTitleIssue function
     ✓ extracts issue number from PR title (1 ms)
-  extractDescriptionIssue function
-    ✓ extracts issue number from PR description
-  compareTitleAndDescriptionIssue function
-    ✓ checks if PR title and PR description contains the same issue number (1 ms)
+  ...
 ```
 
 Run lint

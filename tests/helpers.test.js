@@ -25,6 +25,9 @@ describe("checkPrTitle function", () => {
   it("checks if PR title starts with an issue number", () => {
     expect(helpers.checkPrTitle("123 pr title")).toBeTruthy();
     expect(helpers.checkPrTitle("#123 pr title")).toBeTruthy();
+    expect(helpers.checkPrTitle("#123: pr title")).toBeTruthy();
+    expect(helpers.checkPrTitle("#123, pr title")).toBeTruthy();
+    expect(helpers.checkPrTitle("#123 - pr title")).toBeTruthy();
 
     expect(helpers.checkPrTitle("pr title 123")).toBeFalsy();
     expect(helpers.checkPrTitle("pr title #123")).toBeFalsy();
@@ -32,6 +35,9 @@ describe("checkPrTitle function", () => {
     expect(helpers.checkPrTitle("#123pr title")).toBeFalsy();
     expect(helpers.checkPrTitle("##123 pr title")).toBeFalsy();
     expect(helpers.checkPrTitle("123pr title")).toBeFalsy();
+    expect(helpers.checkPrTitle("#123:pr title")).toBeFalsy();
+    expect(helpers.checkPrTitle("#123::pr title")).toBeFalsy();
+    expect(helpers.checkPrTitle("#123-pr title")).toBeFalsy();
   });
 });
 
@@ -39,13 +45,16 @@ describe("checkPrDescription function", () => {
   it('checks if PR description contains phrase "Fixes #issue"', () => {
     expect(helpers.checkPrDescription("close #123")).toBeTruthy();
     expect(helpers.checkPrDescription("Closed #123")).toBeTruthy();
+    expect(helpers.checkPrDescription("Closed: #123")).toBeTruthy();
     expect(helpers.checkPrDescription("This PR closes #123")).toBeTruthy();
     expect(helpers.checkPrDescription("Fix #123")).toBeTruthy();
+    expect(helpers.checkPrDescription("fix: #123")).toBeTruthy();
     expect(helpers.checkPrDescription("fixed #123")).toBeTruthy();
     expect(helpers.checkPrDescription("This PR fixes #123")).toBeTruthy();
     expect(helpers.checkPrDescription("Resolve #123")).toBeTruthy();
     expect(helpers.checkPrDescription("Resolved #123")).toBeTruthy();
     expect(helpers.checkPrDescription("This PR resolves #123")).toBeTruthy();
+    expect(helpers.checkPrDescription("This PR resolves: #123")).toBeTruthy();
 
     // Github also supports "studly caps"
     expect(helpers.checkPrDescription("clOSe #123")).toBeTruthy();
@@ -58,6 +67,9 @@ describe("checkPrDescription function", () => {
     expect(helpers.checkPrDescription("closed123")).toBeFalsy();
     expect(helpers.checkPrDescription("Fix123")).toBeFalsy();
     expect(helpers.checkPrDescription("resolves#123")).toBeFalsy();
+    expect(helpers.checkPrDescription("Closed:: #123")).toBeFalsy();
+    expect(helpers.checkPrDescription("fix:: #123")).toBeFalsy();
+    expect(helpers.checkPrDescription("This PR resolves:: #123")).toBeFalsy();
   });
 });
 
