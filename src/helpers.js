@@ -4,7 +4,7 @@ function checkPrBranch(prBranch) {
 }
 
 function checkPrTitle(prTitle) {
-  let prTitleRegexp = /^#?\d+[:;,/&]?\s+.+$/;
+  let prTitleRegexp = /^#?\d+:?\s+.+$/;
   return prTitleRegexp.test(prTitle);
 }
 

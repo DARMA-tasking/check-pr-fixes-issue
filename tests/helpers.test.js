@@ -26,7 +26,6 @@ describe("checkPrTitle function", () => {
     expect(helpers.checkPrTitle("123 pr title")).toBeTruthy();
     expect(helpers.checkPrTitle("#123 pr title")).toBeTruthy();
     expect(helpers.checkPrTitle("#123: pr title")).toBeTruthy();
-    expect(helpers.checkPrTitle("#123, pr title")).toBeTruthy();
     expect(helpers.checkPrTitle("#123 - pr title")).toBeTruthy();
 
     expect(helpers.checkPrTitle("pr title 123")).toBeFalsy();
@@ -38,6 +37,7 @@ describe("checkPrTitle function", () => {
     expect(helpers.checkPrTitle("#123:pr title")).toBeFalsy();
     expect(helpers.checkPrTitle("#123::pr title")).toBeFalsy();
     expect(helpers.checkPrTitle("#123-pr title")).toBeFalsy();
+    expect(helpers.checkPrTitle("#123, pr title")).toBeFalsy();
   });
 });
 
