@@ -10,16 +10,22 @@ async function check() {
     if (helpers.checkPrBranch(prBranch) === false) {
       core.setFailed("PR branch has wrong name");
       return;
+    } else {
+      core.info("  - OK");
     }
 
     if (helpers.checkPrTitle(prTitle) === false) {
       core.setFailed("PR title doesn't start with issue number");
       return;
+    } else {
+      core.info("  - OK");
     }
 
     if (helpers.checkPrDescription(prDescription) == false) {
       core.setFailed("PR description doesn't contain 'fixes #issue' phrase");
       return;
+    } else {
+      core.info("  - OK");
     }
 
     if (
@@ -30,9 +36,11 @@ async function check() {
       ) === false
     ) {
       core.setFailed(
-        "PR title and description contain different issue numbers"
+        "Branch name, PR title and PR description contain different issue numbers"
       );
       return;
+    } else {
+      core.info("  - OK");
     }
   } catch (error) {
     core.error(error);

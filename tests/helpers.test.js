@@ -1,4 +1,8 @@
+const core = require("@actions/core");
 const helpers = require("../src/helpers");
+
+// Mute core.info
+core.info = jest.fn();
 
 describe("checkPrBranch function", () => {
   it("checks if PR branch starts with an issue number", () => {
@@ -47,10 +51,12 @@ describe("checkPrDescription function", () => {
     expect(helpers.checkPrDescription("Closed #123")).toBeTruthy();
     expect(helpers.checkPrDescription("Closed: #123")).toBeTruthy();
     expect(helpers.checkPrDescription("This PR closes #123")).toBeTruthy();
+
     expect(helpers.checkPrDescription("Fix #123")).toBeTruthy();
     expect(helpers.checkPrDescription("fix: #123")).toBeTruthy();
     expect(helpers.checkPrDescription("fixed #123")).toBeTruthy();
     expect(helpers.checkPrDescription("This PR fixes #123")).toBeTruthy();
+
     expect(helpers.checkPrDescription("Resolve #123")).toBeTruthy();
     expect(helpers.checkPrDescription("Resolved #123")).toBeTruthy();
     expect(helpers.checkPrDescription("This PR resolves #123")).toBeTruthy();
@@ -62,13 +68,15 @@ describe("checkPrDescription function", () => {
     expect(helpers.checkPrDescription("rEsOlvEs #123")).toBeTruthy();
 
     expect(helpers.checkPrDescription("Closes 123")).toBeFalsy();
-    expect(helpers.checkPrDescription("fixed 123")).toBeFalsy();
-    expect(helpers.checkPrDescription("Resolve ##123")).toBeFalsy();
     expect(helpers.checkPrDescription("closed123")).toBeFalsy();
-    expect(helpers.checkPrDescription("Fix123")).toBeFalsy();
-    expect(helpers.checkPrDescription("resolves#123")).toBeFalsy();
     expect(helpers.checkPrDescription("Closed:: #123")).toBeFalsy();
+
+    expect(helpers.checkPrDescription("fixed 123")).toBeFalsy();
+    expect(helpers.checkPrDescription("Fix123")).toBeFalsy();
     expect(helpers.checkPrDescription("fix:: #123")).toBeFalsy();
+
+    expect(helpers.checkPrDescription("Resolve ##123")).toBeFalsy();
+    expect(helpers.checkPrDescription("resolves#123")).toBeFalsy();
     expect(helpers.checkPrDescription("This PR resolves:: #123")).toBeFalsy();
   });
 });
@@ -93,14 +101,26 @@ describe("extractTitleIssue function", () => {
     expect(helpers.extractTitleIssue("23 pr title")).toEqual(23);
     expect(helpers.extractTitleIssue("#123 pr title")).toEqual(123);
     expect(helpers.extractTitleIssue("#12 pr title")).toEqual(12);
+    expect(helpers.extractTitleIssue("#1234: pr title")).toEqual(1234);
   });
 });
 
 describe("extractDescriptionIssue function", () => {
   it("extracts issue number from PR description", () => {
-    expect(helpers.extractDescriptionIssue("Fixes #123")).toEqual(123);
+    expect(helpers.extractDescriptionIssue("Close #123")).toEqual(123);
+    expect(helpers.extractDescriptionIssue("closes #12")).toEqual(12);
+    expect(helpers.extractDescriptionIssue("This PR closes #23")).toEqual(23);
+    expect(helpers.extractDescriptionIssue("Closed: #1234")).toEqual(1234);
+
+    expect(helpers.extractDescriptionIssue("Fix #123")).toEqual(123);
     expect(helpers.extractDescriptionIssue("fixes #12")).toEqual(12);
     expect(helpers.extractDescriptionIssue("This PR fixes #23")).toEqual(23);
+    expect(helpers.extractDescriptionIssue("Fixed: #1234")).toEqual(1234);
+
+    expect(helpers.extractDescriptionIssue("Resolve #123")).toEqual(123);
+    expect(helpers.extractDescriptionIssue("resolves #12")).toEqual(12);
+    expect(helpers.extractDescriptionIssue("This PR resolves #23")).toEqual(23);
+    expect(helpers.extractDescriptionIssue("Resolved: #1234")).toEqual(1234);
   });
 });
 
