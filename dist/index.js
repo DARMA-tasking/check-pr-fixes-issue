@@ -17,16 +17,22 @@ async function check() {
     if (helpers.checkPrBranch(prBranch) === false) {
       core.setFailed("PR branch has wrong name");
       return;
+    } else {
+      core.info("  - OK");
     }
 
     if (helpers.checkPrTitle(prTitle) === false) {
       core.setFailed("PR title doesn't start with issue number");
       return;
+    } else {
+      core.info("  - OK");
     }
 
     if (helpers.checkPrDescription(prDescription) == false) {
       core.setFailed("PR description doesn't contain 'fixes #issue' phrase");
       return;
+    } else {
+      core.info("  - OK");
     }
 
     if (
@@ -37,9 +43,11 @@ async function check() {
       ) === false
     ) {
       core.setFailed(
-        "PR title and description contain different issue numbers"
+        "Branch name, PR title and PR description contain different issue numbers"
       );
       return;
+    } else {
+      core.info("  - OK");
     }
   } catch (error) {
     core.error(error);
@@ -387,55 +395,82 @@ exports.getState = getState;
 /***/ }),
 
 /***/ 505:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+const core = __webpack_require__(186);
 
 function checkPrBranch(prBranch) {
+  core.info(`Checking branch name formatting\n  - "${prBranch}"`);
+
   let prBranchRegexp = /^\d+(-[^\W_]+)+$/;
   return prBranchRegexp.test(prBranch);
 }
 
 function checkPrTitle(prTitle) {
-  let prTitleRegexp = /^#?\d+\s+.+$/;
+  core.info(`Checking PR title formatting\n  - "${prTitle}"`);
+
+  let prTitleRegexp = /^#?\d+:?\s+.+$/;
   return prTitleRegexp.test(prTitle);
 }
 
 function checkPrDescription(prDescription) {
-  let prDescriptionRegexp = /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))( #)\d+/i;
+  core.info(`Checking PR description formatting\n  - "${prDescription}"`);
+
+  let prDescriptionRegexp = /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))(:? #)\d+/i;
   return prDescriptionRegexp.test(prDescription);
+}
+
+function compareTitleDescriptionBranchIssue(prBranch, prTitle, prDescription) {
+  core.info("Extracting issue number from");
+
+  let branchIssue = extractBranchIssue(prBranch);
+  core.info(`  - branch name - "${branchIssue}"`);
+
+  let titleIssue = extractTitleIssue(prTitle);
+  core.info(`  - PR title - "${titleIssue}"`);
+
+  let descriptionIssue = extractDescriptionIssue(prDescription);
+  core.info(`  - PR description - "${descriptionIssue}"`);
+
+  return branchIssue === titleIssue && titleIssue === descriptionIssue;
 }
 
 function extractBranchIssue(prBranch) {
   let prBranchRegexp = /^\d+(?=((-[^\W_]+)+$))/;
-  let issueNumber = prBranch.match(prBranchRegexp);
-  return parseInt(issueNumber);
+  let issueStr = prBranch.match(prBranchRegexp);
+  let issueNumber = parseInt(issueStr, 10);
+
+  return issueNumber;
 }
 
 function extractTitleIssue(prTitle) {
   let prTitleRegexp = /(((?<=^)\d+)|((?<=^#)\d+))/;
-  let issueNumber = prTitle.match(prTitleRegexp);
-  return parseInt(issueNumber, 10);
+  let issueStr = prTitle.match(prTitleRegexp);
+  let issueNumber = parseInt(issueStr, 10);
+
+  return issueNumber;
 }
 
 function extractDescriptionIssue(prDescription) {
-  let prDescriptionRegexp = /(?<=[Ff]ixes #)\d+/;
-  let issueNumber = prDescription.match(prDescriptionRegexp);
-  return parseInt(issueNumber, 10);
-}
+  // Firstly extract "Fixes #issue" phrase
+  let prDescriptionRegexp = /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))(:? #)\d+/i;
+  let fixesIssueStr = prDescription.match(prDescriptionRegexp);
 
-function compareTitleDescriptionBranchIssue(prBranch, prTitle, prDescription) {
-  let branchIssue = extractBranchIssue(prBranch);
-  let titleIssue = extractTitleIssue(prTitle);
-  let descriptionIssue = extractDescriptionIssue(prDescription);
-  return branchIssue === titleIssue && titleIssue === descriptionIssue;
+  // Next extract issue number
+  let issueNumberRegexp = /\d+/;
+  let issueStr = fixesIssueStr[0].match(issueNumberRegexp);
+  let issueNumber = parseInt(issueStr, 10);
+
+  return issueNumber;
 }
 
 exports.checkPrBranch = checkPrBranch;
 exports.checkPrTitle = checkPrTitle;
 exports.checkPrDescription = checkPrDescription;
+exports.compareTitleDescriptionBranchIssue = compareTitleDescriptionBranchIssue;
 exports.extractBranchIssue = extractBranchIssue;
 exports.extractTitleIssue = extractTitleIssue;
 exports.extractDescriptionIssue = extractDescriptionIssue;
-exports.compareTitleDescriptionBranchIssue = compareTitleDescriptionBranchIssue;
 
 
 /***/ }),
