@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/DARMA-tasking/check-pr-fixes-issue#readme",
   "dependencies": {
-    "@actions/core": "^1.2.5"
+    "@actions/core": "^1.2.6"
   },
   "devDependencies": {
     "@vercel/ncc": "^0.24.1",
