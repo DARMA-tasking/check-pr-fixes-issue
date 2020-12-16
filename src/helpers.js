@@ -17,7 +17,7 @@ function checkPrTitle(prTitle) {
 function checkPrDescription(prDescription) {
   core.info(`Checking PR description formatting\n  - "${prDescription}"`);
 
-  let prDescriptionRegexp = /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))(:? #)\d+/i;
+  let prDescriptionRegexp = /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))(:? (DARMA-tasking\/[\w-]+)?#)\d+/i;
   return prDescriptionRegexp.test(prDescription);
 }
 
