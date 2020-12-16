@@ -14,10 +14,10 @@ function checkPrTitle(prTitle) {
   return prTitleRegexp.test(prTitle);
 }
 
+const prDescriptionRegexp = /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))(:? (DARMA-tasking\/[\w-]+)?#)\d+/i;
+
 function checkPrDescription(prDescription) {
   core.info(`Checking PR description formatting\n  - "${prDescription}"`);
-
-  let prDescriptionRegexp = /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))(:? (DARMA-tasking\/[\w-]+)?#)\d+/i;
   return prDescriptionRegexp.test(prDescription);
 }
 
@@ -54,7 +54,6 @@ function extractTitleIssue(prTitle) {
 
 function extractDescriptionIssue(prDescription) {
   // Firstly extract "Fixes #issue" phrase
-  let prDescriptionRegexp = /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))(:? #)\d+/i;
   let fixesIssueStr = prDescription.match(prDescriptionRegexp);
 
   // Next extract issue number
