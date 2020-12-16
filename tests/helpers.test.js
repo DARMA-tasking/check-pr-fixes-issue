@@ -144,6 +144,13 @@ describe("compareTitleDescriptionBranchIssue function", () => {
         "This PR fixes #23"
       )
     ).toBeTruthy();
+    expect(
+      helpers.compareTitleDescriptionBranchIssue(
+        "1177-vt-darma-tasking-template-repository",
+        "#1177: create template repository",
+        "Fixes DARMA-tasking/vt#1177"
+      )
+    ).toBeTruthy();
 
     expect(
       helpers.compareTitleDescriptionBranchIssue(
