@@ -62,6 +62,10 @@ describe("checkPrDescription function", () => {
     expect(helpers.checkPrDescription("This PR resolves #123")).toBeTruthy();
     expect(helpers.checkPrDescription("This PR resolves: #123")).toBeTruthy();
 
+    expect(helpers.checkPrDescription("Closed DARMA-tasking/vt#123")).toBeTruthy();
+    expect(helpers.checkPrDescription("This PR fixes: DARMA-tasking/vt-vt#123")).toBeTruthy();
+    expect(helpers.checkPrDescription("Resolve DARMA-tasking/vt-foo-bar#123")).toBeTruthy();
+
     // Github also supports "studly caps"
     expect(helpers.checkPrDescription("clOSe #123")).toBeTruthy();
     expect(helpers.checkPrDescription("FIXed #123")).toBeTruthy();
