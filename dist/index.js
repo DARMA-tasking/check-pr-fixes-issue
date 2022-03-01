@@ -467,7 +467,7 @@ const core = __webpack_require__(186);
 function checkPrBranch(prBranch) {
   core.info(`Checking branch name formatting\n  - "${prBranch}"`);
 
-  let prBranchRegexp = /^\d+(-[^\W_]+)+$/;
+  let prBranchRegexp = /^\d+([-_][^\W_]+)+$/;
   return prBranchRegexp.test(prBranch);
 }
 
@@ -478,7 +478,8 @@ function checkPrTitle(prTitle) {
   return prTitleRegexp.test(prTitle);
 }
 
-const prDescriptionRegexp = /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))(:? (DARMA-tasking\/[\w-]+)?#)\d+/i;
+const prDescriptionRegexp =
+  /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))(:? (DARMA-tasking\/[\w-]+)?#)\d+/i;
 
 function checkPrDescription(prDescription) {
   core.info(`Checking PR description formatting\n  - "${prDescription}"`);
