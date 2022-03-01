@@ -3,7 +3,7 @@ const core = require("@actions/core");
 function checkPrBranch(prBranch) {
   core.info(`Checking branch name formatting\n  - "${prBranch}"`);
 
-  let prBranchRegexp = /^\d+([-_][^\W_]+)+$/;
+  let prBranchRegexp = /^\d+(-[^\W_]+(_[^\W_]+)*)+$/;
   return prBranchRegexp.test(prBranch);
 }
 

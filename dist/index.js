@@ -467,7 +467,7 @@ const core = __webpack_require__(186);
 function checkPrBranch(prBranch) {
   core.info(`Checking branch name formatting\n  - "${prBranch}"`);
 
-  let prBranchRegexp = /^\d+([-_][^\W_]+)+$/;
+  let prBranchRegexp = /^\d+(-[^\W_]+(_[^\W_]+)*)+$/;
   return prBranchRegexp.test(prBranch);
 }
 

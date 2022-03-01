@@ -26,6 +26,7 @@ describe("checkPrBranch function", () => {
     expect(helpers.checkPrBranch("1689-add-subphases-to_-lb_iter")).toBeFalsy();
     expect(helpers.checkPrBranch("1689-add-subphases-to-_lb_iter")).toBeFalsy();
     expect(helpers.checkPrBranch("1689-add-subphases-to__lb_iter")).toBeFalsy();
+    expect(helpers.checkPrBranch("1689-add-subphases-to-lb_iter_")).toBeFalsy();
   });
 });
 
