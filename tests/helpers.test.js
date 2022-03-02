@@ -96,82 +96,102 @@ describe("checkPrDescription function", () => {
   });
 });
 
-describe("extractBranchIssue function", () => {
+describe("extractBranchIssueNumber function", () => {
   it("extracts issue number from PR branch", () => {
     expect(
-      helpers.extractBranchIssue("1014-fix-NodeStats-LB-stat-file-output")
+      helpers.extractBranchIssueNumber("1014-fix-NodeStats-LB-stat-file-output")
     ).toEqual(1014);
     expect(
-      helpers.extractBranchIssue("1031-commit-check-for-fixes-issue")
+      helpers.extractBranchIssueNumber("1031-commit-check-for-fixes-issue")
     ).toEqual(1031);
-    expect(helpers.extractBranchIssue("1009-components-memory-usage")).toEqual(
-      1009
+    expect(
+      helpers.extractBranchIssueNumber("1009-components-memory-usage")
+    ).toEqual(1009);
+    expect(
+      helpers.extractBranchIssueNumber("1689-add-subphases-to-lb_iter")
+    ).toEqual(1689);
+  });
+});
+
+describe("extractTitleIssueNumber function", () => {
+  it("extracts issue number from PR title", () => {
+    expect(helpers.extractTitleIssueNumber("123 pr title")).toEqual(123);
+    expect(helpers.extractTitleIssueNumber("23 pr title")).toEqual(23);
+    expect(helpers.extractTitleIssueNumber("#123 pr title")).toEqual(123);
+    expect(helpers.extractTitleIssueNumber("#12 pr title")).toEqual(12);
+    expect(helpers.extractTitleIssueNumber("#1234: pr title")).toEqual(1234);
+  });
+});
+
+describe("extractDescriptionIssueNumber function", () => {
+  it("extracts issue number from PR description", () => {
+    expect(helpers.extractDescriptionIssueNumber("Close #123")).toEqual(123);
+    expect(helpers.extractDescriptionIssueNumber("closes #12")).toEqual(12);
+    expect(helpers.extractDescriptionIssueNumber("This PR closes #23")).toEqual(
+      23
+    );
+    expect(helpers.extractDescriptionIssueNumber("Closed: #1234")).toEqual(
+      1234
+    );
+
+    expect(helpers.extractDescriptionIssueNumber("Fix #123")).toEqual(123);
+    expect(helpers.extractDescriptionIssueNumber("fixes #12")).toEqual(12);
+    expect(helpers.extractDescriptionIssueNumber("This PR fixes #23")).toEqual(
+      23
+    );
+    expect(helpers.extractDescriptionIssueNumber("Fixed: #1234")).toEqual(1234);
+
+    expect(helpers.extractDescriptionIssueNumber("Resolve #123")).toEqual(123);
+    expect(helpers.extractDescriptionIssueNumber("resolves #12")).toEqual(12);
+    expect(
+      helpers.extractDescriptionIssueNumber("This PR resolves #23")
+    ).toEqual(23);
+    expect(helpers.extractDescriptionIssueNumber("Resolved: #1234")).toEqual(
+      1234
     );
   });
 });
 
-describe("extractTitleIssue function", () => {
-  it("extracts issue number from PR title", () => {
-    expect(helpers.extractTitleIssue("123 pr title")).toEqual(123);
-    expect(helpers.extractTitleIssue("23 pr title")).toEqual(23);
-    expect(helpers.extractTitleIssue("#123 pr title")).toEqual(123);
-    expect(helpers.extractTitleIssue("#12 pr title")).toEqual(12);
-    expect(helpers.extractTitleIssue("#1234: pr title")).toEqual(1234);
-  });
-});
-
-describe("extractDescriptionIssue function", () => {
-  it("extracts issue number from PR description", () => {
-    expect(helpers.extractDescriptionIssue("Close #123")).toEqual(123);
-    expect(helpers.extractDescriptionIssue("closes #12")).toEqual(12);
-    expect(helpers.extractDescriptionIssue("This PR closes #23")).toEqual(23);
-    expect(helpers.extractDescriptionIssue("Closed: #1234")).toEqual(1234);
-
-    expect(helpers.extractDescriptionIssue("Fix #123")).toEqual(123);
-    expect(helpers.extractDescriptionIssue("fixes #12")).toEqual(12);
-    expect(helpers.extractDescriptionIssue("This PR fixes #23")).toEqual(23);
-    expect(helpers.extractDescriptionIssue("Fixed: #1234")).toEqual(1234);
-
-    expect(helpers.extractDescriptionIssue("Resolve #123")).toEqual(123);
-    expect(helpers.extractDescriptionIssue("resolves #12")).toEqual(12);
-    expect(helpers.extractDescriptionIssue("This PR resolves #23")).toEqual(23);
-    expect(helpers.extractDescriptionIssue("Resolved: #1234")).toEqual(1234);
-  });
-});
-
-describe("compareTitleDescriptionBranchIssue function", () => {
+describe("compareBranchTitleDescriptionIssueNumber function", () => {
   it("checks if PR branch, title and description contains the same issue number", () => {
     expect(
-      helpers.compareTitleDescriptionBranchIssue(
+      helpers.compareBranchTitleDescriptionIssueNumber(
         "123-fix-NodeStats-LB-stat-file-output",
         "123 pr title",
         "Fixes #123"
       )
     ).toBeTruthy();
     expect(
-      helpers.compareTitleDescriptionBranchIssue(
+      helpers.compareBranchTitleDescriptionIssueNumber(
         "23-commit-check-for-fixes-issue",
         "#23 title",
         "This PR fixes #23"
       )
     ).toBeTruthy();
     expect(
-      helpers.compareTitleDescriptionBranchIssue(
+      helpers.compareBranchTitleDescriptionIssueNumber(
         "1177-vt-darma-tasking-template-repository",
         "#1177: create template repository",
         "Fixes DARMA-tasking/vt#1177"
       )
     ).toBeTruthy();
+    expect(
+      helpers.compareBranchTitleDescriptionIssueNumber(
+        "1689-add-subphases-to-lb_iter",
+        "1689 Add subphases to lb_iter example",
+        "Fixes #1689"
+      )
+    ).toBeTruthy();
 
     expect(
-      helpers.compareTitleDescriptionBranchIssue(
+      helpers.compareBranchTitleDescriptionIssueNumber(
         "1009-components-memory-usage",
         "123 pr title",
         "Fixes #23"
       )
     ).toBeFalsy();
     expect(
-      helpers.compareTitleDescriptionBranchIssue(
+      helpers.compareBranchTitleDescriptionIssueNumber(
         "955-clear-out-uses-of-addAction-in-tests",
         "#123 title",
         "This PR fixes #23"
