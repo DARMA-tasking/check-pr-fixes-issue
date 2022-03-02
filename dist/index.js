@@ -464,64 +464,47 @@ exports.toCommandValue = toCommandValue;
 
 const core = __webpack_require__(186);
 
+const prBranchRegExp = /^\d+(-[^\W_]+(_[^\W_]+)*)+$/;
+const prTitleRegExp = /^#?\d+:?\s+.+$/;
+const prDescriptionRegExp =
+  /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))(:? (DARMA-tasking\/[\w-]+)?#)\d+/i;
+
 function checkPrBranch(prBranch) {
   core.info(`Checking branch name formatting\n  - "${prBranch}"`);
-
-  let prBranchRegexp = /^\d+(-[^\W_]+(_[^\W_]+)*)+$/;
-  return prBranchRegexp.test(prBranch);
+  return prBranchRegExp.test(prBranch);
 }
 
 function checkPrTitle(prTitle) {
   core.info(`Checking PR title formatting\n  - "${prTitle}"`);
-
-  let prTitleRegexp = /^#?\d+:?\s+.+$/;
-  return prTitleRegexp.test(prTitle);
+  return prTitleRegExp.test(prTitle);
 }
-
-const prDescriptionRegexp =
-  /((fix(e[ds])?)|(close[ds]?)|(resolve[ds]?))(:? (DARMA-tasking\/[\w-]+)?#)\d+/i;
 
 function checkPrDescription(prDescription) {
   core.info(`Checking PR description formatting\n  - "${prDescription}"`);
-  return prDescriptionRegexp.test(prDescription);
+  return prDescriptionRegExp.test(prDescription);
 }
 
-function compareTitleDescriptionBranchIssue(prBranch, prTitle, prDescription) {
+function compareBranchTitleDescriptionIssueNumber(
+  prBranch,
+  prTitle,
+  prDescription
+) {
   core.info("Extracting issue number from");
 
-  let branchIssue = extractBranchIssue(prBranch);
+  let branchIssue = extractBranchIssueNumber(prBranch);
   core.info(`  - branch name - "${branchIssue}"`);
 
-  let titleIssue = extractTitleIssue(prTitle);
+  let titleIssue = extractTitleIssueNumber(prTitle);
   core.info(`  - PR title - "${titleIssue}"`);
 
-  let descriptionIssue = extractDescriptionIssue(prDescription);
+  let descriptionIssue = extractDescriptionIssueNumber(prDescription);
   core.info(`  - PR description - "${descriptionIssue}"`);
 
   return branchIssue === titleIssue && titleIssue === descriptionIssue;
 }
 
-function extractBranchIssue(prBranch) {
-  let prBranchRegexp = /^\d+(?=((-[^\W_]+)+$))/;
-  let issueStr = prBranch.match(prBranchRegexp);
-  let issueNumber = parseInt(issueStr, 10);
-
-  return issueNumber;
-}
-
-function extractTitleIssue(prTitle) {
-  let prTitleRegexp = /(((?<=^)\d+)|((?<=^#)\d+))/;
-  let issueStr = prTitle.match(prTitleRegexp);
-  let issueNumber = parseInt(issueStr, 10);
-
-  return issueNumber;
-}
-
-function extractDescriptionIssue(prDescription) {
-  // Firstly extract "Fixes #issue" phrase
-  let fixesIssueStr = prDescription.match(prDescriptionRegexp);
-
-  // Next extract issue number
+function extractIssueNumber(fromStr, withRegExp) {
+  let fixesIssueStr = fromStr.match(withRegExp);
   let issueNumberRegexp = /\d+/;
   let issueStr = fixesIssueStr[0].match(issueNumberRegexp);
   let issueNumber = parseInt(issueStr, 10);
@@ -529,13 +512,26 @@ function extractDescriptionIssue(prDescription) {
   return issueNumber;
 }
 
+function extractBranchIssueNumber(prBranch) {
+  return extractIssueNumber(prBranch, prBranchRegExp);
+}
+
+function extractTitleIssueNumber(prTitle) {
+  return extractIssueNumber(prTitle, prTitleRegExp);
+}
+
+function extractDescriptionIssueNumber(prDescription) {
+  return extractIssueNumber(prDescription, prDescriptionRegExp);
+}
+
 exports.checkPrBranch = checkPrBranch;
 exports.checkPrTitle = checkPrTitle;
 exports.checkPrDescription = checkPrDescription;
-exports.compareTitleDescriptionBranchIssue = compareTitleDescriptionBranchIssue;
-exports.extractBranchIssue = extractBranchIssue;
-exports.extractTitleIssue = extractTitleIssue;
-exports.extractDescriptionIssue = extractDescriptionIssue;
+exports.compareBranchTitleDescriptionIssueNumber =
+  compareBranchTitleDescriptionIssueNumber;
+exports.extractBranchIssueNumber = extractBranchIssueNumber;
+exports.extractTitleIssueNumber = extractTitleIssueNumber;
+exports.extractDescriptionIssueNumber = extractDescriptionIssueNumber;
 
 
 /***/ }),
