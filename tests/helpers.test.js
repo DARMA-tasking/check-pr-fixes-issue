@@ -13,6 +13,7 @@ describe("checkPrBranch function", () => {
       helpers.checkPrBranch("1031-commit-check-for-fixes-issue")
     ).toBeTruthy();
     expect(helpers.checkPrBranch("1009-components-memory-usage")).toBeTruthy();
+    expect(helpers.checkPrBranch("1689-add-subphases-to-lb_iter")).toBeTruthy();
 
     expect(
       helpers.checkPrBranch(
@@ -22,6 +23,10 @@ describe("checkPrBranch function", () => {
     expect(
       helpers.checkPrBranch("Adjust-location-manager-migration-nomenclature")
     ).toBeFalsy();
+    expect(helpers.checkPrBranch("1689-add-subphases-to_-lb_iter")).toBeFalsy();
+    expect(helpers.checkPrBranch("1689-add-subphases-to-_lb_iter")).toBeFalsy();
+    expect(helpers.checkPrBranch("1689-add-subphases-to__lb_iter")).toBeFalsy();
+    expect(helpers.checkPrBranch("1689-add-subphases-to-lb_iter_")).toBeFalsy();
   });
 });
 
@@ -62,9 +67,15 @@ describe("checkPrDescription function", () => {
     expect(helpers.checkPrDescription("This PR resolves #123")).toBeTruthy();
     expect(helpers.checkPrDescription("This PR resolves: #123")).toBeTruthy();
 
-    expect(helpers.checkPrDescription("Closed DARMA-tasking/vt#123")).toBeTruthy();
-    expect(helpers.checkPrDescription("This PR fixes: DARMA-tasking/vt-vt#123")).toBeTruthy();
-    expect(helpers.checkPrDescription("Resolve DARMA-tasking/vt-foo-bar#123")).toBeTruthy();
+    expect(
+      helpers.checkPrDescription("Closed DARMA-tasking/vt#123")
+    ).toBeTruthy();
+    expect(
+      helpers.checkPrDescription("This PR fixes: DARMA-tasking/vt-vt#123")
+    ).toBeTruthy();
+    expect(
+      helpers.checkPrDescription("Resolve DARMA-tasking/vt-foo-bar#123")
+    ).toBeTruthy();
 
     // Github also supports "studly caps"
     expect(helpers.checkPrDescription("clOSe #123")).toBeTruthy();
