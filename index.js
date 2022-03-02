@@ -29,7 +29,7 @@ async function check() {
     }
 
     if (
-      helpers.compareTitleDescriptionBranchIssue(
+      helpers.compareBranchTitleDescriptionIssueNumber(
         prBranch,
         prTitle,
         prDescription
