@@ -80,7 +80,7 @@ GitHub Actions will run the entry point from the `action.yml`
 
 ```yml
 runs:
-  using: "node16"
+  using: "node20"
   main: "dist/index.js" # <== entry point
 ```
 
